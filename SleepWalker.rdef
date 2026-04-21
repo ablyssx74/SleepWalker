@@ -1,14 +1,14 @@
-resource app_flags B_SINGLE_LAUNCH;
+resource app_flags B_SINGLE_LAUNCH | B_BACKGROUND_APP;
 resource app_signature "application/x-vnd.sleepwalker";
 
 resource app_version {
-    major  = 0,
-    minor  = 1,
+    major  = 1,
+    minor  = 0,
     middle = 0,
     variety = 0,
     internal = 0,
-    short_info = "A daemon to launch Terminal and run a script during shutdown or reboot.",
-    long_info = "A daemon to launch Terminal and run a script during shutdown or reboot."
+    short_info = "SleepWalker.",
+    long_info = "SleepWalker - Shutdown Script Listener"
 };
 
 

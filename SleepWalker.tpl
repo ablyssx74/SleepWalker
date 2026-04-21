@@ -1,8 +1,8 @@
 name			$(NAME)
 version			$(VERSION)-1
 architecture	$(ARCH)
-summary 		"A daemon to launch Terminal and run a script during shutdown or reboot."
-description 	"A daemon to launch Terminal and run a script during shutdown or reboot."
+summary 		"SleepWalker"
+description 	"SleepWalker - Shutdown Script Listener for Haiku"
 packager		"ablyss <jb@epluribusunix.net>"
 vendor			"Haiku Project"
 licenses {
