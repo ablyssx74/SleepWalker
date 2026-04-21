@@ -7,10 +7,9 @@
 #include <Directory.h>
 #include <Entry.h>
 #include <File.h>
-#include <Alert.h>
 #include <Roster.h>
+#include <Alert.h>
 #include <Messenger.h>
-#include <StringList.h>
 #include <string.h>
 #include <cstdio>
 
@@ -56,28 +55,14 @@ public:
         }
     }
 
-    // Standard shutdown:
-    virtual bool QuitRequested() {
-        const char* scriptPath = "/boot/home/config/settings/SleepWalker/sleepwalker.sh";
-        BEntry entry(scriptPath);
-        if (entry.Exists()) {
-            BStringList args;
-            args.Add("Terminal");
-            args.Add(scriptPath);
-
-            int32 argc = args.CountStrings();
-            char* argv[argc];
-            for (int32 i = 0; i < argc; i++) argv[i] = (char*)args.StringAt(i).String();
-
-            be_roster->Launch("application/x-vnd.Haiku-Terminal", argc, argv);
-        }
+    virtual bool QuitRequested() {    	
+        system("/boot/system/apps/Terminal /boot/home/config/settings/SleepWalker/sleepwalker.sh");       
         return true; 
     }
 };
 int main(int argc, char** argv) {
     const char* sig = "application/x-vnd.SleepWalker";
 
-    // 1. Handle Help Flag
     if (argc > 1 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
         printf("SleepWalker - Shutdown Script Listener for Haiku\n\n");
         printf("Usage:\n");
@@ -88,7 +73,6 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    // 2. Handle -q (Silent Quit)
     if (argc > 1 && strcmp(argv[1], "-q") == 0) {
         BMessenger messenger(sig);
         if (messenger.IsValid()) {
@@ -100,53 +84,9 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    // 5. Normal Launch attempt
     ShutdownListener app;
 
     app.Run();
     return 0;
 }
 
-/*
-int main(int argc, char** argv) {
-    const char* sig = "application/x-vnd.SleepWalker";
-
-    // 1. Handle -q (Silent Quit)
-    if (argc > 1 && strcmp(argv[1], "-q") == 0) {
-        BMessenger messenger(sig);
-        if (messenger.IsValid()) {
-            messenger.SendMessage(MSG_QUICK_QUIT);
-            printf("SleepWalker shutting down silently.\n");
-        } else {
-            printf("SleepWalker is not running.\n");
-        }
-        return 0;
-    }
-
-    // 2. Handle -status
-    if (argc > 1 && strcmp(argv[1], "-status") == 0) {
-        if (be_roster->IsRunning(sig)) {
-            printf("SleepWalker is currently ACTIVE.\n");
-        } else {
-            printf("SleepWalker is NOT running.\n");
-        }
-        return 0;
-    }
-
-    // 3. Normal Launch attempt
-    ShutdownListener app;
-    if (app.InitCheck() != B_OK) {
-        // If we get here with no arguments, it means a launch was 
-        // attempted while it was already active.
-        if (argc == 1) {
-            printf("SleepWalker is already running.\n");
-        } else {
-            fprintf(stderr, "Error: Could not launch SleepWalker.\n");
-        }
-        return 1;
-    }
-    
-    app.Run();
-    return 0;
-}
-*/
