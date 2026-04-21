@@ -3,7 +3,6 @@ SHELL := /bin/bash
 
 PACKAGE_DIR := build/package
 NAME = SleepWalker
-lname = sleepwalker
 VERSION = 1.0.0
 
 
@@ -52,11 +51,9 @@ package: all
 	mkdir -p $(PACKAGE_DIR)/data/$(NAME)
 	mkdir -p $(PACKAGE_DIR)/bin
 	mkdir -p $(PACKAGE_DIR)/data/deskbar/menu/Applications
-	mkdir -p $(PACKAGE_DIR)/data/mime_db/application/
 	rc -o $(NAME).rsrc $(NAME).rdef 
 	xres -o $(NAME) $(NAME).rsrc  
 	mimeset -f $(NAME)
-	touch $(PACKAGE_DIR)/data/mime_db/application/x-vnd.$(lname)
 	cp $(NAME) $(PACKAGE_DIR)/apps/$(NAME)
 	cp $(NAME)_64px.png $(PACKAGE_DIR)/data/$(NAME)/
 	ln -s ../apps/$(NAME) $(PACKAGE_DIR)/bin/$(NAME)

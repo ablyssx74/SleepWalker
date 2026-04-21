@@ -29,8 +29,11 @@ public:
     }
 
     virtual void ReadyToRun() {
-        const char* dirPath = "/boot/home/config/settings/SleepWalker";
-        const char* scriptPath = "/boot/home/config/settings/SleepWalker/sleepwalker.sh";
+    	const char* dirPath = "/boot/home/config/settings/SleepWalker";
+    	const char* scriptPath = "/boot/home/config/settings/SleepWalker/sleepwalker.sh";
+    	const char* launchDir = "/boot/home/config/settings/boot/launch";
+    	const char* symlinkPath = "/boot/home/config/settings/boot/launch/SleepWalker";
+    	const char* appPath = "/boot/system/apps/SleepWalker";
         
         if (create_directory(dirPath, 0755) != B_OK) return;
 
@@ -53,7 +56,21 @@ public:
                 alert->Go();
             }
         }
-    }
+        
+        BEntry linkEntry(symlinkPath);
+    	if (!linkEntry.Exists()) {
+        	// Ensure the launch directory exists
+        	if (create_directory(launchDir, 0755) == B_OK) {
+            	BDirectory launchBDir(launchDir);
+            	if (launchBDir.CreateSymLink(symlinkPath, appPath, NULL) == B_OK) {
+                	BAlert* autoAlert = new BAlert("Auto-start Enabled", 
+                    "SleepWalker has been added to your startup folder.", 
+                    "Great");
+                autoAlert->Go();
+            }
+        }
+    }        
+}
 
     virtual bool QuitRequested() {    	
         system("/boot/system/apps/Terminal /boot/home/config/settings/SleepWalker/sleepwalker.sh");       
