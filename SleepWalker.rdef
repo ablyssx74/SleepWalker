@@ -1,6 +1,6 @@
 //resource app_flags 0x05;
 resource app_flags B_SINGLE_LAUNCH;
-resource app_signature "application/x-vnd.sleepwalker";
+resource app_signature "application/x-vnd.Be-SYS.SleepWalker";
 
 resource app_version {
     major  = 1,
