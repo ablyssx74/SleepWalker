@@ -1,5 +1,6 @@
 /*
  * Copyright 2026, Kris Beazley "ablyss" jb@epluribusunix.net
+ * AI Assisted
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 
@@ -20,12 +21,12 @@ extern char **environ;
 class ShutdownListener : public BApplication {
 public:
     ShutdownListener()
-        : BApplication("application/x-vnd.Be-SYS.SleepWalker", B_SINGLE_LAUNCH),
-          fInstalling(false) {}
+        : BApplication("application/x-vnd.Be-SYS.SleepWalker", B_SINGLE_LAUNCH)
+        {}
+        
 		  
     virtual void MessageReceived(BMessage* msg) {
         if (msg->what == MSG_QUICK_QUIT) {
-            fInstalling = true; 
             Quit(); 
         } else {
             BApplication::MessageReceived(msg);
@@ -83,22 +84,22 @@ public:
         }        
     }
 
-virtual bool QuitRequested() {
-    const char* args[] = {
-        "/bin/bash",
-        "/boot/home/config/settings/SleepWalker/sleepwalker.sh",
-        NULL
-    };
+	virtual bool QuitRequested() {
+    	const char* args[] = {
+        	"/bin/bash",
+        	"/boot/home/config/settings/SleepWalker/sleepwalker.sh",
+        	NULL
+    	};
 
-    thread_id thread = load_image(2, args, (const char**)environ);
-    if (thread >= B_OK) {
-        resume_thread(thread);
-    }
+    	thread_id thread = load_image(2, args, (const char**)environ);
+    	if (thread >= B_OK) {
+        	resume_thread(thread);
+    	}
 
-    bool isReboot = false;
-    BMessage* msg = CurrentMessage();
+    	bool isReboot = false;
+    	BMessage* msg = CurrentMessage();
 
-    BAlert* alert = new BAlert("SleepWalker", "SleepWalker needs time to process your scripts.\n\nProceed when you are ready.", 
+    	BAlert* alert = new BAlert("SleepWalker", "SleepWalker needs time to process your scripts.\n\nProceed when you are ready.", 
            "Cancel", "Shutdown", "Reboot", 
             B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
         
@@ -107,20 +108,16 @@ virtual bool QuitRequested() {
         
         isReboot = (selection == 2);
  
-    BFile actionFile("/tmp/sleepwalker_action", B_WRITE_ONLY | B_CREATE_FILE | B_ERASE_FILE);
-    if (actionFile.InitCheck() == B_OK) {
-        const char* cmd = isReboot ? "shutdown -r\n" : "shutdown\n";
-        actionFile.Write(cmd, strlen(cmd));
-        actionFile.Sync(); 
-    }
+    	BFile actionFile("/tmp/sleepwalker_action", B_WRITE_ONLY | B_CREATE_FILE | B_ERASE_FILE);
+    	if (actionFile.InitCheck() == B_OK) {
+        	const char* cmd = isReboot ? "shutdown -r\n" : "shutdown\n";
+        	actionFile.Write(cmd, strlen(cmd));
+        	actionFile.Sync(); 
+    	}
 
-    return true;
-}
+    	return true;
+	}
 
-
-
-private:
-    bool fInstalling;
 };
 
 int main(int argc, char** argv) {
