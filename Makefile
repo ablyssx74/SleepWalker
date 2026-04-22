@@ -62,9 +62,9 @@ package: all
 
 
 clean:
-	rm -f $(NAME)
-	rm -f $(NAME).rsrc
-	rm -fr build*
-	rm -r *.hpkg
+	@rm -f $(NAME) $(NAME).rsrc $(NAME)-$(VERSION)-1-$(ARCH).hpkg
+	@rm -rf build
+	@echo "Cleanup complete."
+
 
 

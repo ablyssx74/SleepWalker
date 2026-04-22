@@ -20,9 +20,9 @@ extern char **environ;
 class ShutdownListener : public BApplication {
 public:
     ShutdownListener()
-        : BApplication("application/x-vnd.SleepWalker", B_SINGLE_LAUNCH),
+        : BApplication("application/x-vnd.Be-SYS.SleepWalker", B_SINGLE_LAUNCH),
           fInstalling(false) {}
-
+		  
     virtual void MessageReceived(BMessage* msg) {
         if (msg->what == MSG_QUICK_QUIT) {
             fInstalling = true; 
@@ -124,7 +124,8 @@ private:
 };
 
 int main(int argc, char** argv) {
-    const char* sig = "application/x-vnd.SleepWalker";
+   // const char* sig = "application/x-vnd.SleepWalker";
+   const char* sig = "application/x-vnd.Be-SYS.SleepWalker";
 
     if (argc > 1 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
         printf("SleepWalker - Shutdown Script Listener for Haiku\n\n");
