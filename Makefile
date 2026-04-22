@@ -39,7 +39,6 @@ build:
 	@echo "--------- Building $(NAME) $(ARCH) ---------"
 
 	$(CXX) -o $(NAME) $(INCLUDE) $(BUILD_FLAGS) $(HAIKU_LIBS) $(LD_OPTIMIZE) $(NAME).cpp
-	mimeset -f $(NAME) 
 
 
 package: all
