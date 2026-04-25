@@ -100,7 +100,7 @@ public:
     	BMessage* msg = CurrentMessage();
 
     	BAlert* alert = new BAlert("SleepWalker", "SleepWalker needs time to process your scripts.\n\nProceed when you are ready.", 
-           "Cancel", "Shutdown", "Reboot", 
+           "Cancel", "Poweroff", "Reboot", 
             B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
         
         int32 selection = alert->Go();
