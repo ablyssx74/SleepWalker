@@ -7,14 +7,14 @@ VERSION = 1.0.0
 
 
 UNAME_M := $(shell uname -p)
-ifeq ($(UNAME_M), x86)
+ifeq ($(UNAME_M), BePC)
 CXX = g++-x86 
 CC = gcc-x86
 MAKE := setarch x86 $(MAKE)
 ARCH = x86_gcc2
 SIMD_FLAGS := -O2
 INCLUDE = -L/boot/system/lib/x86 
-else ifeq ($(UNAME_M), x86_64)
+else
 CXX = g++
 CC = gcc
 ARCH = x86_64
