@@ -113,9 +113,23 @@ class ShutdownListener : public BApplication {
 public:
     ShutdownListener()
         : BApplication("application/x-vnd.Be-SYS.SleepWalker", B_SINGLE_LAUNCH)
-        {}
+        {
+        	
+        // =========================================================================
+        // AUTOMATED BACKGROUND UPDATE CHECKER THREAD INITIALIZATION
+        // =========================================================================
+        thread_id updateThread = spawn_thread(BackgroundUpdateChecker, "UpdateCheckerThread", B_NORMAL_PRIORITY, this);
+        if (updateThread >= 0) {
+            resume_thread(updateThread);
+        }
+        // =========================================================================
+        	
+        	
+        	
+        }
         
-		  
+
+      	  
     virtual void MessageReceived(BMessage* msg) {
         if (msg->what == MSG_QUICK_QUIT) {
             Quit(); 
