@@ -15,6 +15,97 @@
 #include <cstdio>
 #include <image.h>
 #include <OS.h>
+#include <sys/stat.h>
+#include <Notification.h>
+
+namespace AppInfo {
+	static const char* const APP_NAME = "SleepWalker";
+    static const char* const VERSION_STRING = "v1.0.1";
+
+}
+
+// =============================================================================
+// Update Checker
+// =============================================================================
+static int32 BackgroundUpdateChecker(void* data) {
+    snooze(5000000); 
+
+    printf("[UpdateChecker] Asynchronous curl update checker running...\n");
+
+    const char* targetUrl = "https://raw.githubusercontent.com/ablyssx74/SleepWalker/refs/heads/main/VERSION";
+
+    BString shellCmdString;
+    shellCmdString.SetToFormat("curl -sL \"%s\"", targetUrl);
+
+    BString remoteVersionStr = "";
+    
+    FILE* pipeStream = popen(shellCmdString.String(), "r");
+    if (pipeStream != nullptr) {
+        char buffer[128] = {0};
+        if (fgets(buffer, sizeof(buffer), pipeStream) != nullptr) {
+            remoteVersionStr = buffer;
+        }
+        pclose(pipeStream);
+    }
+
+    remoteVersionStr.Trim(); 
+     printf("[UpdateChecker] Raw text received from GitHub: '%s'\n", remoteVersionStr.String());
+
+    if (remoteVersionStr.Length() > 0) {
+    	BString currentAppStr = AppInfo::APP_NAME;
+        BString currentVersionStr = AppInfo::VERSION_STRING;
+        printf("[UpdateChecker] Local AppInfo text before cleaning: '%s'\n", currentVersionStr.String());
+
+        int32 curMajor = 0, curMinor = 0, curRevision = 0;
+        int32 remMajor = 0, remMinor = 0, remRevision = 0;
+
+
+        if (sscanf(currentVersionStr.String(), "%*[^v]v%d.%d.%d", &curMajor, &curMinor, &curRevision) != 3) {
+            sscanf(currentVersionStr.String(), "%*[^0-9]%d.%d.%d", &curMajor, &curMinor, &curRevision);
+        }
+
+        if (sscanf(remoteVersionStr.String(), "%*[^v]v%d.%d.%d", &remMajor, &remMinor, &remRevision) != 3) {
+            sscanf(remoteVersionStr.String(), "%*[^0-9]%d.%d.%d", &remMajor, &remMinor, &remRevision);
+        }
+
+        
+            printf("[UpdateChecker] Cleaned local target string: '%d.%d.%d'\n", curMajor, curMinor, curRevision);
+        
+
+        int32 currentFlattened = (curMajor * 10000) + (curMinor * 100) + curRevision;
+        int32 remoteFlattened  = (remMajor * 10000) + (remMinor * 100) + remRevision;
+
+      
+            printf("[UpdateChecker] Calculated values for math match -> Local: %d | Remote: %d\n", 
+                   (int)currentFlattened, (int)remoteFlattened);
+        
+
+
+			if (remoteFlattened > currentFlattened) {
+			    printf("[UpdateChecker] Update found! Sending notification...\n");
+			
+			    BNotification updateAlert(B_INFORMATION_NOTIFICATION);
+			    updateAlert.SetGroup(currentAppStr);
+			    updateAlert.SetTitle("Update Available");
+			    
+			    BString alertContent;
+			    // Added spaces around currentAppStr so it reads: "of GLToogle is available!"
+			    alertContent << "A newer version of " << currentAppStr << " is available! (" << remoteVersionStr << ")";
+			    updateAlert.SetContent(alertContent.String());
+			    
+			    updateAlert.Send();
+			    printf("[UpdateChecker] Toast notification sent successfully.\n");
+			} else {
+			    printf("[UpdateChecker] Client binary is up to date.\n");
+			}
+
+		    } else {
+		        printf("[UpdateChecker] CRITICAL ERR: Raw text data read from pipe buffer was empty!\n");
+		    }
+    
+    return B_OK;
+}
+
 
 const uint32 MSG_QUICK_QUIT = 'qqit';
 extern char **environ; 
@@ -85,6 +176,19 @@ public:
     }
 
 	virtual bool QuitRequested() {
+		
+     //------------
+	 // If all we want to do is run the shutdown script if nebula is not installed then enable this.
+	 // By Default this is off but can be compiled in with `make CHK_GL=ON package`
+	  #ifdef CHK_GL
+        struct stat mesaBuffer;
+        bool hasHardwareDriver = (stat("/boot/system/add-ons/opengl/egl_vendor.d/libEGL_mesa.so", &mesaBuffer) == 0);        
+        if (hasHardwareDriver) {
+            return true;
+        }
+      #endif
+     //------------  
+     
     	const char* args[] = {
         	"/bin/bash",
         	"/boot/home/config/settings/SleepWalker/sleepwalker.sh",

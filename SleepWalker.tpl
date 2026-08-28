@@ -3,7 +3,7 @@ version			$(VERSION)-1
 architecture	$(ARCH)
 summary 		"SleepWalker"
 description 	"SleepWalker - Shutdown Script Listener for Haiku"
-packager		"ablyss <jb@epluribusunix.net>"
+packager		"ablyss <$(NAME)@epluribusunix.net>"
 vendor			"Haiku Project"
 licenses {
 	"MIT"
@@ -16,8 +16,9 @@ provides {
 }
 requires {
 	haiku
+	curl$(is32bit)
 }	
 urls {
-	"https://github.com/ablyssx74/"
+	"https://github.com/ablyssx74/SleepWalker"
 }
 

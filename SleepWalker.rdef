@@ -3,14 +3,15 @@ resource app_flags B_SINGLE_LAUNCH;
 resource app_signature "application/x-vnd.Be-SYS.SleepWalker";
 
 resource app_version {
-    major  = 1,
-    minor  = 0,
-    middle = 0,
-    variety = 0,
+    major  = 1,   
+    minor  = 0,   
+    middle = 1,   
+    variety = B_APPV_DEVELOPMENT, 
     internal = 0,
     short_info = "SleepWalker.",
     long_info = "SleepWalker - Shutdown Script Listener"
 };
+
 
 
 
