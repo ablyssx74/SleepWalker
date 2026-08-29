@@ -3,7 +3,7 @@ SHELL := /bin/bash
 
 PACKAGE_DIR := build/package
 NAME = SleepWalker
-VERSION = 1.0.1
+VERSION = 1.0.2
 
 
 UNAME_M := $(shell uname -m)
