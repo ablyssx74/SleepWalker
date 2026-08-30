@@ -20,7 +20,7 @@
 
 namespace AppInfo {
 	static const char* const APP_NAME = "SleepWalker";
-    static const char* const VERSION_STRING = "v1.0.1";
+    static const char* const VERSION_STRING = "v1.0.2";
 
 }
 
