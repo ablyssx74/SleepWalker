@@ -93,7 +93,6 @@ static int32 BackgroundUpdateChecker(void* data) {
 			    updateAlert.SetTitle("Update Available");
 			    
 			    BString alertContent;
-			    // Added spaces around currentAppStr so it reads: "of GLToogle is available!"
 			    alertContent << "A newer version of " << currentAppStr << " is available! (" << remoteVersionStr << ")";
 			    updateAlert.SetContent(alertContent.String());
 			    
