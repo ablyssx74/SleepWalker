@@ -3,7 +3,7 @@ SHELL := /bin/bash
 
 PACKAGE_DIR := build/package
 NAME = SleepWalker
-VERSION = 1.0.2
+VERSION = 1.0.3
 
 
 UNAME_M := $(shell uname -m)
@@ -29,7 +29,7 @@ LD_OPTIMIZE = -Wl,--gc-sections
 
 
 EXTRA_LIBS = 
-HAIKU_LIBS = -lbe
+HAIKU_LIBS = -lbe -lcurl
 
 ifeq ($(CHK_GL), ON)
     DEFINES += -DCHK_GL
