@@ -3,7 +3,13 @@ SHELL := /bin/bash
 
 PACKAGE_DIR := build/package
 NAME = SleepWalker
-VERSION = 1.0.3
+# The one place a release changes is the VERSION file: the program (and its update check), the package and the
+# resource all take it from there.
+VERSION := $(shell sed -n 's/.*\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' VERSION | head -1)
+V_MAJOR := $(word 1,$(subst ., ,$(VERSION)))
+V_MIDDLE := $(word 2,$(subst ., ,$(VERSION)))
+V_MINOR := $(word 3,$(subst ., ,$(VERSION)))
+DEFINES += -DAPP_LOCAL_VERSION=\"$(VERSION)\"
 
 
 UNAME_M := $(shell uname -m)
@@ -54,7 +60,8 @@ package: all
 	mkdir -p $(PACKAGE_DIR)/data/$(NAME)
 	mkdir -p $(PACKAGE_DIR)/bin
 	mkdir -p $(PACKAGE_DIR)/data/deskbar/menu/Applications
-	rc -o $(NAME).rsrc $(NAME).rdef 
+	sed -e 's/@V_MAJOR@/$(V_MAJOR)/' -e 's/@V_MIDDLE@/$(V_MIDDLE)/' -e 's/@V_MINOR@/$(V_MINOR)/' -e 's/@VERSION@/$(VERSION)/' $(NAME).rdef > $(NAME).version.rdef
+	rc -o $(NAME).rsrc $(NAME).version.rdef
 	xres -o $(NAME) $(NAME).rsrc  
 	mimeset -f $(NAME)
 	cp $(NAME) $(PACKAGE_DIR)/apps/$(NAME)
@@ -65,7 +72,7 @@ package: all
 
 
 clean:
-	@rm -f $(NAME) $(NAME).rsrc *.hpkg
+	@rm -f $(NAME) $(NAME).rsrc *.version.rdef *.hpkg
 	@rm -rf build
 	@echo "Cleanup complete."
 
